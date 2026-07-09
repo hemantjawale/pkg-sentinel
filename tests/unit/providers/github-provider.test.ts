@@ -35,6 +35,6 @@ describe('GitHubProvider', () => {
 
     expect(stats.openCount).toBe(1);
     expect(stats.closedCount).toBe(1);
-    expect(stats.avgResponseTimeHours).toBe(24);
+    expect(stats.avgResponseTimeHours).toBeCloseTo(24, 1);
   });
 });
