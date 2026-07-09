@@ -1,6 +1,6 @@
 {
   "name": "pkg-sentinel",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Production-quality npm supply-chain security CLI — trust analysis, health scoring, install script inspection, typosquatting detection, and AI-powered risk summaries.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -55,12 +55,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pkg-sentinel/pkg-sentinel.git"
+    "url": "git+https://github.com/hemantjawale/pkg-sentinel.git"
   },
   "bugs": {
-    "url": "https://github.com/pkg-sentinel/pkg-sentinel/issues"
+    "url": "https://github.com/hemantjawale/pkg-sentinel/issues"
   },
-  "homepage": "https://github.com/pkg-sentinel/pkg-sentinel#readme",
+  "homepage": "https://github.com/hemantjawale/pkg-sentinel#readme",
   "engines": {
     "node": ">=18.0.0"
   },

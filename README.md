@@ -1,6 +1,6 @@
 # 🛡️ pkg-sentinel
 
-[![CI Status](https://github.com/pkg-sentinel/pkg-sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/pkg-sentinel/pkg-sentinel/actions)
+[![CI Status](https://github.com/hemantjawale/pkg-sentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/hemantjawale/pkg-sentinel/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%23007acc.svg)](https://www.typescriptlang.org/)
 [![Node.js Compatibility](https://img.shields.io/badge/node-%3E%3D%2018.0.0-green.svg)](https://nodejs.org/)
@@ -91,7 +91,7 @@ npm install -g pkg-sentinel
 To run tests and compile from source:
 ```bash
 # Clone the repository
-git clone https://github.com/pkg-sentinel/pkg-sentinel.git
+git clone https://github.com/hemantjawale/pkg-sentinel.git
 cd pkg-sentinel
 
 # Install package dependencies
