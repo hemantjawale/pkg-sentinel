@@ -129,9 +129,9 @@ export class NpmProvider implements INpmProvider {
 
       await new Promise<void>((resolve, reject) => {
         const readable = Readable.from(buffer);
-        const parser = new tar.Parse();
+        const parser = new tar.Parser();
 
-        parser.on('entry', (entry) => {
+        parser.on('entry', (entry: import('tar').ReadEntry) => {
           const isInteresting =
             entry.type === 'File' &&
             (entry.path.endsWith('.js') ||
@@ -155,7 +155,7 @@ export class NpmProvider implements INpmProvider {
         });
 
         parser.on('end', () => resolve());
-        parser.on('error', (err) => reject(err));
+        parser.on('error', (err: Error) => reject(err));
 
         readable.pipe(parser);
       });
