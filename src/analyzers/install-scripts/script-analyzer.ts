@@ -182,6 +182,12 @@ export class ScriptAnalyzer implements IAnalyzer {
  * we can analyze that file. For inline commands, we wrap them.
  */
 function wrapScriptForParsing(script: string): string {
+  // If it's a node command with inline script (-e or --eval), extract the JavaScript
+  const evalMatch = script.match(/(?:node|node\.exe)\s+(?:-e|--eval)\s+["']([\s\S]+?)["']\s*$/);
+  if (evalMatch && evalMatch[1]) {
+    return evalMatch[1];
+  }
+
   // If it's a node command running a file, mark that file for analysis
   if (/^node\s+/.test(script)) {
     // Extract the file path for later analysis

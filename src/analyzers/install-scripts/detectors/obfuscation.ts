@@ -26,7 +26,7 @@ export class ObfuscationDetector implements IDetector {
           });
         }
 
-        // new Function()
+        // Function constructor called without new
         if (callee.name === 'Function' && callee.type === 'Identifier') {
           ctx.report({
             detector: 'obfuscation',
@@ -79,6 +79,20 @@ export class ObfuscationDetector implements IDetector {
             severity: 'low',
             description: `Uses ${callee.name}() for base64 encoding/decoding`,
             location: (node as unknown as { loc?: { start: { line: number; column: number } } }).loc?.start,
+          });
+        }
+      },
+
+      NewExpression(path: { node: { callee: { name?: string; type?: string }; loc?: { start: { line: number; column: number } } } }) {
+        const node = path.node;
+        const callee = node.callee;
+        if (callee.name === 'Function' && callee.type === 'Identifier') {
+          ctx.report({
+            detector: 'obfuscation',
+            type: 'function-constructor',
+            severity: 'critical',
+            description: 'Uses Function constructor for dynamic code execution',
+            location: node.loc?.start,
           });
         }
       },
