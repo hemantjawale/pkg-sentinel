@@ -3,16 +3,16 @@
  */
 
 import { beforeAll, afterAll, afterEach } from 'vitest';
+import { server } from './mocks/server.js';
 
 beforeAll(() => {
-  // Suppress console output during tests
-  // Comment this out for debugging
+  server.listen({ onUnhandledRequest: 'bypass' });
 });
 
 afterEach(() => {
-  // Reset any global state
+  server.resetHandlers();
 });
 
 afterAll(() => {
-  // Cleanup
+  server.close();
 });

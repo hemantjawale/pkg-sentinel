@@ -102,8 +102,6 @@ export class NpmProvider implements INpmProvider {
     packageName: string,
     version: string,
   ): Promise<Map<string, string>> {
-    // In a full implementation, this would download and extract the tarball.
-    // For now, we extract script files from the version metadata.
     const metadata = await this.getPackageMetadata(packageName);
     const versionData = metadata.versions[version];
 
@@ -114,9 +112,56 @@ export class NpmProvider implements INpmProvider {
     }
 
     const files = new Map<string, string>();
-
-    // Include package.json as a file so analyzers can inspect scripts
     files.set('package.json', JSON.stringify(versionData, null, 2));
+
+    try {
+      const tarballUrl = versionData.dist.tarball;
+      const response = await fetch(tarballUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch tarball from ${tarballUrl}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      const { Readable } = await import('node:stream');
+      const tar = await import('tar');
+
+      await new Promise<void>((resolve, reject) => {
+        const readable = Readable.from(buffer);
+        const parser = new tar.Parse();
+
+        parser.on('entry', (entry) => {
+          const isInteresting =
+            entry.type === 'File' &&
+            (entry.path.endsWith('.js') ||
+              entry.path.endsWith('.ts') ||
+              entry.path.endsWith('.json') ||
+              entry.path.endsWith('.sh') ||
+              entry.path.endsWith('.bat'));
+
+          if (!isInteresting) {
+            entry.resume();
+            return;
+          }
+
+          const chunks: Buffer[] = [];
+          entry.on('data', (chunk: Buffer) => chunks.push(chunk));
+          entry.on('end', () => {
+            const content = Buffer.concat(chunks).toString('utf-8');
+            const cleanPath = entry.path.replace(/^package\//, '');
+            files.set(cleanPath, content);
+          });
+        });
+
+        parser.on('end', () => resolve());
+        parser.on('error', (err) => reject(err));
+
+        readable.pipe(parser);
+      });
+    } catch {
+      // Fallback to only metadata package.json if download/extraction fails
+    }
 
     return files;
   }
